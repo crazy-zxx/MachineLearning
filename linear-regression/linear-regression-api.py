@@ -29,14 +29,19 @@ def load_array(data_array, batch_size, is_train=True):
     :param data_array: 数据集
     :param batch_size: 批量大小
     :param is_train: 是否为训练集
-    :return: 数据集加载器
+    :return: 批量数据加载器
     """
     dataset = data.TensorDataset(*data_array)
     return data.DataLoader(dataset, batch_size, shuffle=is_train)
 
 
 def show_example(features, labels):
-    # 训练数据可视化，绘制数据分布图
+    """
+    训练数据可视化，绘制数据分布图
+    :param features: 特征
+    :param labels: 标签
+    :return:
+    """
     plt.subplot(2, 1, 1)
     plt.plot(features[:, 0], labels, 'b.')
     plt.subplot(2, 1, 2)
@@ -83,6 +88,7 @@ if __name__ == '__main__':
         l = loss(net(features), labels)
         print(f'epoch {epoch + 1}, loss {l:f}')
 
+    # 计算误差
     w = net[0].weight.data
     print('w的估计误差：', true_w - w.reshape(true_w.shape))
     b = net[0].bias.data

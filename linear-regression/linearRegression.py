@@ -24,6 +24,13 @@ def generate_data(w, b, num_samples):
 
 
 def data_iter(features, labels, batch_size):
+    """
+    批量数据迭代器
+    :param features: 特征
+    :param labels: 标签
+    :param batch_size: 批量大小
+    :return: 批量数据
+    """
     num_samples = len(features)
     indices = list(range(num_samples))
     # 样本随机读取
@@ -70,7 +77,12 @@ def sgd(params, lr, batch_size):
 
 
 def show_example(features, labels):
-    # 训练数据可视化，绘制数据分布图
+    """
+    训练数据可视化，绘制数据分布图
+    :param features: 特征
+    :param labels: 标签
+    :return:
+    """
     plt.subplot(2, 1, 1)
     plt.plot(features[:, 0], labels, 'b.')
     plt.subplot(2, 1, 2)
@@ -89,7 +101,16 @@ def init_net():
 
 
 def train(features, labels, w, b, batch_size, num_epochs):
-    # 训练
+    """
+    训练
+    :param features: 特征
+    :param labels: 标签
+    :param w: 模型初始化权重
+    :param b: 模型初始化偏置
+    :param batch_size: 批量大小
+    :param num_epochs: 迭代次数
+    :return:
+    """
     for epoch in range(num_epochs):
         for X, y in data_iter(features, labels, batch_size):
             # 计算当前批量损失
@@ -103,6 +124,7 @@ def train(features, labels, w, b, batch_size, num_epochs):
             train_l = loss(net(features, w, b), labels)
             print(f'epoch {epoch + 1}, loss {float(train_l.mean()):f}')
 
+    # 计算误差
     print(f'w的估计误差: {true_w - w.reshape(true_w.shape)}')
     print(f'b的估计误差: {true_b - b}')
 
