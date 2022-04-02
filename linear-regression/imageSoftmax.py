@@ -69,6 +69,34 @@ def accuracy(y_pred, y):
     return float(cmp.type(y.dtype).sum())
 
 
+class Accumulator:
+    """在n个变量上累加"""
+
+    def __init__(self, n):
+        self.data = [0.0] * n
+
+    def add(self, *args):
+        self.data = [a + float(b) for a, b in zip(self.data, args)]
+
+    def reset(self):
+        self.data = [0.0] * len(self.data)
+
+    def __getitem__(self, idx):
+        return self.data[idx]
+
+
+def evaluate_accuracy(net, data_iter):
+    if isinstance(net, torch.nn.Module):
+        net.eval()
+    # 在Accumulator实例中创建了2个变量， 分别用于存储正确预测的数量和预测的总数量。
+    # 当我们遍历数据集时，两者都将随着时间的推移而累加。
+    metric = Accumulator(2)
+    with torch.no_grad():
+        for X, y in data_iter:
+            metric.add(accuracy(net(X), y), y.numel())
+    return metric[0] / metric[1]
+
+
 if __name__ == '__main__':
     train_iter, _ = load_data_fashion_mnist(18, resize=64)
     X, y = next(iter(train_iter))
